@@ -16,7 +16,7 @@ const config = {
   url: "https://your-docusaurus-site.example.com",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/myBlogs.github.io/",
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -47,7 +47,27 @@ const config = {
             "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
         blog: {
+          feedOptions: {
+            type: "all",
+            copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc.`,
+            createFeedItems: async (params) => {
+              const { blogPosts, defaultCreateFeedItems, ...rest } = params;
+              return defaultCreateFeedItems({
+                // keep only the 10 most recent blog posts in the feed
+                blogPosts: blogPosts.filter((item, index) => index < 10),
+                ...rest,
+              });
+            },
+          },
+          // blogSidebarTitle: "All posts",
+          blogSidebarCount: "ALL", //展示几个
+          blogTitle: "Docusaurus blog!",
+          blogDescription: "A Docusaurus powered blog!",
+          postsPerPage: "ALL",
           showReadingTime: true,
+          readingTime: ({ content, frontMatter, defaultReadingTime }) =>
+            defaultReadingTime({ content, options: { wordsPerMinute: 300 } }),
+
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -63,6 +83,14 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      docs: {
+        sidebar: {
+          // 屏幕变窄自动隐藏sidebar
+          hideable: true,
+          // 手风琴模式
+          autoCollapseCategories: true,
+        },
+      },
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
       navbar: {
@@ -78,6 +106,13 @@ const config = {
             position: "left",
             label: "Tutorial",
           },
+          {
+            type: "docSidebar",
+            sidebarId: "mySidebar",
+            position: "left",
+            label: "mySidebar",
+          },
+
           { to: "/blog", label: "Blog", position: "left" },
           {
             href: "https://github.com/facebook/docusaurus",
