@@ -79,6 +79,7 @@ const config = {
       }),
     ],
   ],
+
   //  @type {import('@docusaurus/preset-classic').ThemeConfig}
   themeConfig: {
     docs: {
