@@ -8,9 +8,9 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
+  title: "阿喵的窝",
   tagline: "Dinosaurs are cool",
-  favicon: "img/favicon.ico",
+  favicon: "img/logo.png",
 
   // Set the production url of your site here
   url: "https://your-docusaurus-site.example.com",
@@ -97,7 +97,8 @@ const config = {
         title: "My Site",
         logo: {
           alt: "My Site Logo",
-          src: "img/logo.svg",
+          src: "img/logo.png",
+          style: { borderRadius: "50%" },
         },
         items: [
           {
