@@ -82,14 +82,14 @@ const config = {
 
   //  @type {import('@docusaurus/preset-classic').ThemeConfig}
   themeConfig: {
-    docs: {
-      sidebar: {
-        // 屏幕变窄自动隐藏sidebar
-        hideable: true,
-        // 手风琴模式
-        autoCollapseCategories: true,
-      },
-    },
+    // docs: {
+    //   sidebar: {
+    //     // 屏幕变窄自动隐藏sidebar
+    //     hideable: true,
+    //     // 手风琴模式
+    //     autoCollapseCategories: true,
+    //   },
+    // },
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
