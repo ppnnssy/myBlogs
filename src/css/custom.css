@@ -29,5 +29,17 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 .navbar {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(255, 255, 255, 0.5);
 }
+
+.navbar__items {
+  justify-content: center;
+  position: relative;
+}
+.navbar__brand {
+  position: absolute;
+  left: 0;
+}
+/* .navbar__link {
+  margin: 0 auto;
+} */
