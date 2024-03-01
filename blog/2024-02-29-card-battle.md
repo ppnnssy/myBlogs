@@ -1,3 +1,10 @@
+---
+slug: card-battle
+title: card-battle
+authors: [ppnnssy]
+tags: [hola, docusaurus]
+---
+
 # cardbattle 笔记
 
 ## 项目的建立

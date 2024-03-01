@@ -47,18 +47,6 @@ const config = {
             "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
         blog: {
-          feedOptions: {
-            type: "all",
-            copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc.`,
-            createFeedItems: async (params) => {
-              const { blogPosts, defaultCreateFeedItems, ...rest } = params;
-              return defaultCreateFeedItems({
-                // keep only the 10 most recent blog posts in the feed
-                blogPosts: blogPosts.filter((item, index) => index < 10),
-                ...rest,
-              });
-            },
-          },
           // blogSidebarTitle: "All posts",
           blogSidebarCount: "ALL", //展示几个
           blogTitle: "Docusaurus blog!",
