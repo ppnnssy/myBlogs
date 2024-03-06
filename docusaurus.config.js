@@ -9,19 +9,19 @@ import { themes as prismThemes } from "prism-react-renderer";
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "阿喵的窝",
-  tagline: "Dinosaurs are cool",
+  tagline: "热爱技术，热爱生活",
   favicon: "img/logo.png",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://myblogs-e31.pages.dev/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  // organizationName: "facebook", // Usually your GitHub org/user name.
+  // projectName: "docusaurus", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -30,8 +30,8 @@ const config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: "en",
-    locales: ["en"],
+    defaultLocale: "zh-Hans",
+    locales: ["zh-Hans"],
   },
 
   presets: [
@@ -96,6 +96,7 @@ const config = {
         },
 
         { to: "/blog", label: "Blog", position: "left" },
+
         {
           href: "https://github.com/ppnnssy",
           label: "GitHub",
