@@ -12,7 +12,9 @@ tags: [Docusaurus, 静态网站, blog]
 ## 参考
 
 Docusaurus 官方文档：https://docusaurus.io/zh-CN/docs
+
 大佬的笔记：https://kuizuo.cn/docs/docusaurus-guides
+
 fork 大佬的项目：https://github.com/ppnnssy/blog
 
 ## 搭建过程
@@ -26,6 +28,8 @@ fork 大佬的项目：https://github.com/ppnnssy/blog
 docusaurus.config.ts
 
 sidebar.js
+
+具体配置参考官方文档吧
 
 ### 3. 引入 Scss
 
@@ -149,9 +153,13 @@ module.exports = {
 ![Alt text](image-6.png)
 
 导入图标 css 文件：
+
 `import "../asset/font_icon/iconfont.css";`
+
 使用图标
+
 `<span className="iconfont icon-icon_zuoyoujiantou icon"></span>`
+
 icon 类是自己定义的，可以在这里面控制 span 的样式和图标的大小
 
 ### 6.导入静态资源文件（图片和 svg）
@@ -201,7 +209,7 @@ export { lygithub };
 
 先说 blog。首先有个 authors.yml 文件，文件中保存了作者信息。这里先添加上我自己
 
-````
+```
 
 ppnnssy:
 name: ppnnssy
@@ -227,15 +235,23 @@ tags: [Docusaurus, 静态网站, blog]
 ```
 
 下面解释四个的含义：
+
 slug：本博客的 id，也就是本博客页面的路由。例如本博客路由如下
+
 ![Alt text](image.png)
+
 title：博客标题，会显示在侧边导航栏
+
 ![Alt text](image-1.png)
+
 authors：就是作者了，作者具体信息在 authors.yml 中
+
 tags：本文章的标签，会显示在 blog 页的最下方
+
 ![Alt text](image-2.png)
 
 然后是 docs
+
 docs 文件夹列表一般是这个样子：
 
 ```
@@ -261,7 +277,9 @@ docs 文件夹列表一般是这个样子：
 ```
 
 显示到页面上，文件夹和文件夹对应侧边导航栏
+
 ![Alt text](image-3.png)
+
 文件夹的顺序可以通过内部的 \_category\_.json 文件调整
 
 ```
@@ -278,8 +296,11 @@ docs 文件夹列表一般是这个样子：
 ```
 
 label：侧边栏上显示的文件夹名
+
 position：文件夹在总列表中的顺序
+
 description：点击文件夹显示的页面上的描述
+
 ![Alt text](image-4.png)
 
 文件夹内部的.md 文档同样在文件上使用 position 表示文档顺序
@@ -290,7 +311,6 @@ description：点击文件夹显示的页面上的描述
 
 ## sidebar_position: 6
 
-```
+---
 
 ```
-````
