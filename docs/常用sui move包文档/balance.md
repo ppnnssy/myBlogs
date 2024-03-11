@@ -39,7 +39,7 @@ struct Balance<phantom T> has store {
 `public fun create_supply<T: drop>(_: T): Supply<T> `
 
 增加 Supply 的 value 值，并返回一个 Balance，这个 Balance 的 value 值为原 Supply.value+参数 value
-限定 Supply.value+参数 value<18446744073709551615u64
+限定 Supply.value+参数 value < 18446744073709551615u64
 
 `public fun increase_supply<T>(self: &mut Supply<T>, value: u64): Balance<T>`
 
