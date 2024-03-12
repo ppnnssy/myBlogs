@@ -63,4 +63,4 @@ struct Balance<phantom T> has store {
 `public fun destroy_zero<T>(balance: Balance<T>)`
 
 销毁 Supply，返回其中的 value 值
-`public(friend) fun destroy_supply<T>(self: Supply<T>): u64`
+`public(friend) fun destroy_supply<T>(self: Supply<T>): u64 `
