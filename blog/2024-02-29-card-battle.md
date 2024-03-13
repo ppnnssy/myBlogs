@@ -158,6 +158,7 @@ import { useSignAndExecuteTransactionBlock } from "@mysten/dapp-kit";
 ```
 
 获取发送交易的函数。useSignAndExecuteTransactionBlock 是钩子函数，只能在组件中使用
+
 `const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();`
 
 构造交易块
