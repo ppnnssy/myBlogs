@@ -8,6 +8,7 @@ import styles from "./index.module.css";
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
+
   return (
     <Layout description="阿喵的个人Blog，聊聊技术，记录生活">
       <main>

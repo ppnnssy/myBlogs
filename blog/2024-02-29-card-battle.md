@@ -34,6 +34,12 @@ tags: [hola, docusaurus]
 `import { ConnectButton } from "@mysten/dapp-kit";`
 简单的使用组件，甚至不需要传入任何参数
 
+### 获取当前账户
+
+`import { useCurrentAccount } from "@mysten/dapp-kit";`
+这是个钩子函数
+`const myAccount = useCurrentAccount();`
+
 ### 获取对象信息
 
 根据对象 id 获取对象信息。这是使用了封装好的钩子函数 useSuiClientQuery
