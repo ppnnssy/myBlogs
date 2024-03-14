@@ -2,7 +2,7 @@
 slug: card-battle
 title: card-battle
 authors: [ppnnssy]
-tags: [hola, docusaurus]
+tags: [Move, docusaurus, Sui TypeScript SDK, Sui]
 ---
 
 # cardbattle 笔记
