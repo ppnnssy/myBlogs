@@ -185,3 +185,34 @@ public entry fun burn(
 ```
 
 将一个铭文分割成两个，其中的 balance 按照 amount 的比例分割
+
+## V3 版本合约变动
+
+### 结构体变动
+
+```
+   struct BurnReceipt has key, store {
+        id: UID,
+        tick: String,
+        amount: u64,
+    }
+```
+
+添加了 BurnReceipt 结构体。在铭文被 burn 掉的时候，玩家可以获得一个收据
+
+### 新增函数
+
+burn 一个铭文，并返回铭文中锁定的 SUI，并返回给玩家一个收据
+
+```
+    public fun do_burn_for_receipt(
+        tick_record: &mut TickRecord,
+        inscription: Movescription,
+        message: vector<u8>,
+        ctx: &mut TxContext
+    ) : (Coin<SUI>, BurnReceipt)
+```
+
+销毁丢弃收据，返回铭文的名字和数量
+
+`public fun drop_receipt(receipt: BurnReceipt):(String, u64)`
