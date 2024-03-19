@@ -1,5 +1,5 @@
 ---
-slug: Movescriptions
+slug: Movescriptions4.0-其他合约
 title: Movescriptions源码分析-V4.0 其他合约
 authors: [ppnnssy]
 tags: [Movescriptions, Move, 智能合约, 铭文]
