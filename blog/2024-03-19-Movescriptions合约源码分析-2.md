@@ -51,16 +51,18 @@ tags: [Movescriptions, Move, 智能合约, 铭文]
 函数内部还是调用了 movescription 合约中的部署函数来完成功能
 `let tick_record = movescription::internal_deploy_with_witness(...)`
 
+新版本中 MOVE 铭文用来铸造别的内置铭文
+
 2. 部署其他铭文
    <span id="jump1"></span>
-   2.1 这个版本发生了改变，在本合约中发行其他类型铭文，不再需要 MOVE 铭文，而是需要 TICK 铭文
+   2.1 这个版本发生了改变，在本合约中部署其他类型铭文，不再需要 MOVE 铭文，而是需要 TICK 铭文
    TICK 铭文的来源是 tick_factory.move 合约。后面会详细讲到
    部署铭文的函数调用关系如下：
    `public entry fun deploy` --> `public fun do_deploy` --> `tick_factory::do_deploy`
    do_deploy 函数会校验 tick_name 是否为“TICK”
-   发行新铭文的玩法除了变成消耗 TICK 铭文外，和之前版本相同。铭文消耗之后会将里面锁定的 SUI 返回给玩家
+   部署新铭文的玩法除了变成消耗 TICK 铭文外，和之前版本相同。铭文消耗之后会将里面锁定的 SUI 返回给玩家
 
-   2.2 这个版本的部署逻辑有一个明显的改变。之前版本中记录 epoch 的字段在 new TickRecord 的时候就会创建，现在新建的 TickRecordV2 中没有该字段，要通过 after_deploy 函数添加
+2.2 这个版本的部署逻辑有一个明显的改变。之前版本中记录 epoch 的字段在 new TickRecord 的时候就会创建，现在新建的 TickRecordV2 中没有该字段，要通过 after_deploy 函数添加
 
 ```
     fun after_deploy(
@@ -90,14 +92,32 @@ tags: [Movescriptions, Move, 智能合约, 铭文]
 
 ## tick_factory.move
 
-这个合约主要用来创建 TICK 铭文，并消耗 TICK 铭文用来发行新的铭文
+这个合约主要用来创建 TICK 铭文，并消耗 TICK 铭文用来部署新的铭文
 
 1.  部署“TICK”铭文。
     `public fun deploy_tick_tick(deploy_record: &mut DeployRecord, ctx: &mut TxContext)`
     和部署 MOVE 铭文基本相同，这个函数将在 init.move 合约的 init_protocol 函数中统一调用
 
-2.  发行新的铭文
-    前面讲 epoch_bus_factory 合约发行新铭文的时候，要调用 tick_factory::do_deploy ([回顾](#jump1))
+2.  铸造 TICK 铭文
+
+    ```
+        public fun do_mint(
+        tick_tick_record: &mut TickRecordV2,
+        locked_move: Movescription,
+        tick_name: vector<u8>,
+        clock: &Clock,
+        ctx: &mut TxContext) : Movescription
+    ```
+
+    这个函数是消耗 MOVE 来铸造 TICK 铭文的函数，locked_move 必须是 MOVE 铭文。
+    函数将铸造一个 amount=1，SUI=0 的 TICK 铭文，并把 locked_move 铭文锁进去
+    这个"锁进去"指的是使用上一篇文章中提到的铭文嵌套的方式，将 MOVE 铭文嵌套进 TICK
+    当然，当 TICK 铭文被 burn 销毁后，MOVE 会被返回给玩家
+
+    新版本的合约在部署新铭文的时候，多了一个流程，即 MOVE --> TICK --> 新铭文
+
+3.  部署新的铭文
+    前面讲 epoch_bus_factory 合约部署新铭文的时候，要调用 tick_factory::do_deploy ([回顾](#jump1))
 
     ```
     public fun do_deploy<W: drop>(
@@ -112,29 +132,38 @@ tags: [Movescriptions, Move, 智能合约, 铭文]
     ) : TickRecordV2
     ```
 
-    这个函数将 burn 掉 tick_name_movescription 铭文，然后发行新的铭文
+    部署新铭文要消耗 TICK 铭文
+    这个函数将 burn 掉 tick_name_movescription 铭文，然后部署新的铭文
     要注意，这个新铭文的名称使用的是 tick_name_movescription 中的 metadata.content，而不是其中的 tick 字段
-    所以新版本的合约，不再直接消耗 MOVE 铭文发行新铭文，而改成了消耗 TICK
-    那么 MOVE 铭文可以用来干什么呢？答案是用来铸造 TICK 铭文：
-
-3.  铸造铭文
-
-    ```
-        public fun do_mint(
-        tick_tick_record: &mut TickRecordV2,
-        locked_move: Movescription,
-        tick_name: vector<u8>,
-        clock: &Clock,
-        ctx: &mut TxContext) : Movescription
-    ```
-
-    这个函数是铸造 TICK 铭文的函数，locked_move 必须是 MOVE 铭文。
-    函数将铸造一个 amount=1，SUI=0 的 TICK 铭文，并把 locked_move 铭文锁进去
-    这个"锁进去"指的是使用上一篇文章中提到的铭文嵌套的方式，将 MOVE 铭文嵌套进 TICK
-    当然，当 TICK 铭文被 burn 销毁后，MOVE 会被返回给玩家
-
-    新版本的合约在发行新铭文的时候，多了一个流程，即 MOVE --> TICK --> 新铭文
+    所以新版本的合约，不再直接消耗 MOVE 铭文部署新铭文，而改成了消耗 TICK
 
 4.  销毁铭文
 
 和别的销毁基本没有区别，销毁对象并将其中的 SUI 和 locked
+
+## name_factory.move 合约
+
+这个合约和上面的 tick_factory.move 逻辑非常相似，主要功能是：
+
+1.部署 NAME 铭文
+
+2.铸造 NAME 铭文
+
+3.销毁 NAME 铭文
+
+区别在于，TICK 铭文用来部署别的铭文，而 NAME 铭文用来表达个人或者组织的 Name
+个人或组织的名称记录在 NAME 铭文的 matadata 中。
+TICK 铭文 业务流程为：
+`MOVE --> TICK:{tick:"TICK",metadata:要部署的铭文名称} --> 部署铭文`
+
+NAME 业务流程未：
+`MOVE -->NAME:{tick:"NAME",metadata:个人或者组织的名称}`
+[项目方关于 NAME 铭文的解释](https://github.com/movescriptions/MIPs/issues/17)
+
+## 总结
+
+智能铭文 Movescriptions 项目的主要合约分析完毕了
+新版本的合约中，一共有 4 种内置铭文，分别是"MOVE","TICK","NAME","TEST"。
+其中 TEST 是用来测试的，我们并不关注
+TICK 用来部署铭文，NAME 是用户 id，各有用途
+整个合约比之前复杂很多，考虑了更多的安全性和扩展性。

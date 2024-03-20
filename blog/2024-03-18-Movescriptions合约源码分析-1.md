@@ -43,6 +43,9 @@ tags: [Movescriptions, Move, 智能合约, 铭文]
 
 ## 主合约 movescription
 
+本合约主要是提供一些基础函数，如 mint 功能的构造铭文，burn 的销毁铭文。
+这些函数都添加了 witness 模式，不允许直接调用，而是通过上层函数调用。
+
 ### 结构体
 
 首先结构体有所变化，之前的 TickRecord 名字改成 TickRecordV2 ，分成了两个嵌套的结构体
