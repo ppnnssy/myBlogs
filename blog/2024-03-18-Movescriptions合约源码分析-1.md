@@ -1,6 +1,6 @@
 ---
 slug: Movescriptions4.0-Movescriptions.move主合约
-title: Movescriptions源码分析-V4.0 Movescriptions.move主合约
+title: Movescriptions源码分析-V4.0 主合约
 authors: [ppnnssy]
 tags: [Movescriptions, Move, 智能合约, 铭文]
 ---
