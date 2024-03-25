@@ -170,7 +170,7 @@ swap 函数中实际上调用了`cetus_clmm::pool`中的三个函数实现功能
 
 使用一种币购买另一种币，本质就是交换，所以购买函数“buy”就是调用上面的“swap”函数
 `swap(config, pool, balance::zero<T>(), coin::into_balance(sui), false, clk)`
-在 swap 函数中，把买家的币 sui 和 balance::zero<T>()进行互换，然后返回给买家
+在 swap 函数中，把买家的币 sui 和 balance::zero&lt;T&gt;()进行互换，然后返回给买家
 
 #### 5. 获取收益
 
