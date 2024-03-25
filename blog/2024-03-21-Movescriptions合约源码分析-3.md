@@ -175,10 +175,14 @@ swap 函数中实际上调用了`cetus_clmm::pool`中的三个函数实现功能
 #### 5. 获取收益
 
 收取交易费奖励：
+向流动性池中添加了流动性的账户可以获取奖励。
+实际提取奖励的函数：
 
 ```
     public fun do_collect_fee<T: drop>(config: &GlobalConfig, pool: &mut Pool<T,SUI>, tick_record: &mut TickRecordV2, ctx: &mut TxContext) :(Balance<T>, Balance<SUI>)
 ```
+
+这个函数会返回调用者在流动性池中应该获得的奖励
 
 ## 总结
 
