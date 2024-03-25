@@ -151,7 +151,8 @@ tags: [Movescriptions, Move, 智能合约, 铭文]
 
 3.销毁 NAME 铭文
 
-区别在于，TICK 铭文用来部署别的铭文，而 NAME 铭文用来表达个人或者组织的 Name
+区别在于，TICK 铭文用来部署别的铭文，而 NAME 铭文用来表达个人或者组织的 Name。
+
 个人或组织的名称记录在 NAME 铭文的 matadata 中。
 TICK 铭文 业务流程为：
 `MOVE --> TICK:{tick:"TICK",metadata:要部署的铭文名称} --> 部署铭文`
