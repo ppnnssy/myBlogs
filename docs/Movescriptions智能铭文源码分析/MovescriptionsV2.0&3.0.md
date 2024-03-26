@@ -1,8 +1,5 @@
 ---
-slug: Movescriptions
-title: Movescriptions源码分析-V2.0 & V3.0
-authors: [ppnnssy]
-tags: [Movescriptions, Move, 智能合约, 铭文]
+sidebar_position: 1
 ---
 
 ## 智能铭文简介
@@ -13,7 +10,7 @@ tags: [Movescriptions, Move, 智能合约, 铭文]
 
 项目和源码地址：https://github.com/movescriptions/movescriptions/tree/v2.0.0
 
-[源文件](./_sui/sources/movescription.move)
+[源文件](./movescription.move)
 
 这里分析的是 2.0 版本，用作 MOVE 智能合约以及智能铭文的学习
 

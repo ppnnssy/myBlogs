@@ -1,8 +1,5 @@
 ---
-slug: MovescriptionsV4.1
-title: Movescriptions源码分析-V4.1
-authors: [ppnnssy]
-tags: [Movescriptions, Move, 智能合约, 铭文, Defi, 区块链金融]
+sidebar_position: 4
 ---
 
 4.1 版本比之前的版本增加了交易功能，交易功能的实现基本都是在 movescription_to_amm.move 合约中实现，所以本篇文章我们的重点关注点在 movescription_to_amm 合约，流动性池，交易等问题上
