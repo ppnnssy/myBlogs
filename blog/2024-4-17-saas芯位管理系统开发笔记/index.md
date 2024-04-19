@@ -168,4 +168,4 @@ let pcas = require("../pcas-code.json");
 node官网地址：https://nodejs.org/download/release/v14.21.3/
 
 当然，安装好了之后，以后想卸载还要下点功夫：
-参考：
+参考：https://myblogs-e31.pages.dev/blog/node
