@@ -20,6 +20,14 @@ Vue2+js的老项目，五六年了。还在用node14版本。
 总之写起来相当麻烦
 
 ## 各个问题及解决方法
+### 0.开发环境部署
+老项目部署环境也会出问题。首先使用的是node14版本。
+本来我平时是使用nvm管理版本的，但是对14版本的node，nvm下载不了其对应的npm，只能手动下载。
+node官网地址：https://nodejs.org/download/release/v14.21.3/
+
+当然，安装好了之后，以后想卸载还要下点功夫：
+参考：https://myblogs-e31.pages.dev/blog/node
+
 ### 1.详情页的布局：
 ![alt text](image-5.png)
 这种布局看起来是使用el-descriptions分两列（column=2）就好了，但是会发现logo那一行占得太高了。因为左右是一一对应的。
@@ -162,10 +170,15 @@ let pcas = require("../pcas-code.json");
 ```
 布局使用的还是el-row和el-col，分两栏，然后添加上背景等细节
 
-### 5.开发环境部署
-老项目部署环境也会出问题。首先使用的是node14版本。
-本来我平时是使用nvm管理版本的，但是对14版本的node，nvm下载不了其对应的npm，只能手动下载。
-node官网地址：https://nodejs.org/download/release/v14.21.3/
+### 5.test和dev环境下样式不同的问题
+最开始dev环境后台出了问题，无法登陆，所以先用test环境开发，运行的是npm run test
+写完页面之后，dev环境好了，于是使用npm run dev。代码都是同一个分支的代码
+于是出现问题：
+test的样式：
+![alt text](image-9.png)
 
-当然，安装好了之后，以后想卸载还要下点功夫：
-参考：https://myblogs-e31.pages.dev/blog/node
+dev的样式：
+![alt text](image-10.png)
+
+排查发现少了.avatar-uploader-icon这个类。应该是其他组件写样式没有写scoped，被污染了
+因为是老项目，所以不敢动别的组件，于是在公共组件文件中加上样式就好了
