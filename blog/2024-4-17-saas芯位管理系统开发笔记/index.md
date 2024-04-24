@@ -180,5 +180,7 @@ test的样式：
 dev的样式：
 ![alt text](image-10.png)
 
-排查发现少了.avatar-uploader-icon这个类。应该是其他组件写样式没有写scoped，被污染了
+排查发现少了.avatar-uploader-icon .avatar-uploader .el-upload这几个类。应该是其他组件写样式没有写scoped，被污染了
 因为是老项目，所以不敢动别的组件，于是在公共组件文件中加上样式就好了
+
+具体为什么test环境是正常的，还不知道
