@@ -13,8 +13,10 @@ tags: [npm]
 ## 2.项目准备
 
 首先要有个 github 的代码仓库。新建一个，拉取下来：
+
 ![alt text](image.png)
 注意新建的时候选择 license，这是开源协议，没有的话没法发布 npm 包，后面 package.json 配置文件中也会有这一项
+
 ![alt text](image-1.png)
 
 运行 `npm init`，创建初始的 package.json 文件
