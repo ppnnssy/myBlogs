@@ -24,13 +24,16 @@ tags: [npm]
 
 安装插件
 `pnpm add @rollup/plugin-commonjs @rollup/plugin-node-resolve @rollup/plugin-typescript`
+
 `pnpm add tslib typescript`
+
 `pnpm add rollup-plugin-terser rollup-plugin-cleanup`
 关于插件的功能，可以百度看看
 rollup-plugin-terser 插件用于代码压缩
 rollup-plugin-cleanup 插件用于去除无效代码
 
 由于要使用 ts 写代码，所以配置 ts 环境
+
 `npx tsc --init`
 
 ## 3.项目配置
@@ -87,6 +90,7 @@ rollup-plugin-cleanup 插件用于去除无效代码
 }
 ```
 配置rollup(配置打包工具真是让人头大)，参考https://www.rollupjs.com/
+
 在项目根目录下新建文件rollup.config.js，关于rollup的详细配置可参考官网教程。对于我们的工具库而言，rollup可简单配置如下：
 ```
 import resolve from '@rollup/plugin-node-resolve';
@@ -179,24 +183,31 @@ export const dayOfYear = (date?: Date | string): number => {
 ```
 问一下AI其中某些字段的含义：
 ![alt text](image-2.png)
+
 文心一言这样回答的：
 ![alt text](image-3.png)
 ![alt text](image-4.png)
+
 还行，当个搜索引擎还没有太智障
 
 ## 5.打包发布
 打包文件：
+
 `pnpm build`
 
 生成了dist文件夹，目前的文件结构：
+
 ![alt text](image-5.png)
 
 注册个npm账号，然后在终端登录：
+
 `npm login`
 可能需要验证一下
 
 登录之后发布
+
 `npm publish`
 
 成功的话就能看到自己的包了
+
 ![alt text](image-6.png)
