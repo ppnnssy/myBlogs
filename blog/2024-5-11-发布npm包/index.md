@@ -33,6 +33,7 @@ rollup-plugin-cleanup 插件用于去除无效代码
 由于要使用 ts 写代码，所以配置 ts 环境
 `npx tsc --init`
 
+## 3.项目配置
 修改 tsconfig.json 文件如下：
 
 ```
@@ -117,6 +118,7 @@ export default [
 
 这里要注意，因为使用了import引入，所以package.json中要配置`"type": "module"`,否则打包的时候报错
 
+## 4.写代码
 新建src/index.ts文件。写个函数：
 ```
 // 返回传入的日期是今年的第几天,如果不传参数则默认是当前日期
@@ -182,6 +184,7 @@ export const dayOfYear = (date?: Date | string): number => {
 ![alt text](image-4.png)
 还行，当个搜索引擎还没有太智障
 
+## 5.打包发布
 打包文件：
 `pnpm build`
 
