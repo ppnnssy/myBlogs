@@ -136,10 +136,191 @@ let pcas = require("../pcas-code.json");
 页面加载的时候提前获取 省 数据，选择省之后在change事件中获取市，以此类推
 问题在于重新选择省、市、县之后，更低级的数据都要清空重来，所以需要在change中清空，重新请求数据。
 
-具体代码如下：
-结构：
+因为还有别的地方会用到这个功能，所以封装了一个组件
+```
+<template>
+  <div class="wider">
+    <el-row :gutter="20">
+      <el-col :span="6">
+        <el-select
+          v-model="provience"
+          @change="
+            (id) => {
+              areaChange(1, id);
+            }
+          "
+          placeholder="省"
+        >
+          <el-option
+            v-for="item in provinceList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="6">
+        <el-select
+          v-model="city"
+          @change="
+            (id) => {
+              areaChange(2, id);
+            }
+          "
+          placeholder="市"
+        >
+          <el-option
+            v-for="item in cityList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="6">
+        <el-select
+          v-model="county"
+          @change="
+            (id) => {
+              areaChange(3, id);
+            }
+          "
+          placeholder="区县"
+        >
+          <el-option
+            v-for="item in countyList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="6">
+        <el-select
+          v-model="infraAreaId"
+          placeholder="乡镇"
+          @change="
+            (id) => {
+              areaChange(4, id);
+            }
+          "
+        >
+          <el-option
+            v-for="item in townList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+    </el-row>
 
+    <el-input
+      v-model="detailAddress"
+      style="margin-top: 5px"
+      placeholder="请输入详细地址"
+      @change="sendAddress"
+    />
+  </div>
+</template>
 
+<script>
+<!-- getAreaByLevel 根据区域等级获取本等级所有地址信息 -->
+<!-- 区域等级：1：省 2：市 3：县 4：镇  -->
+<!-- getAreaByParentId 根据某个区域的id，获取本区域所有的下级区域 如获取河南省下所有市 -->
+import { getAreaByLevel, getAreaByParentId } from "@/api/tenant/list";
+export default {
+  name: "address",
+  props: ["detailAddress"],
+  data() {
+    return {
+      // 选择地址要用的
+      provinceList: [],
+      provience: undefined,
+      cityList: [],
+      city: undefined,
+      countyList: [],
+      county: undefined,
+      townList: [],
+      infraAreaId: undefined,
+      detailAddress: this.detailAddress,//detailAddress回填
+    };
+  },
+  created() {
+    this.getProvienceList();
+  },
+  methods: {
+    async getProvienceList() {
+      const res = await getAreaByLevel(1);
+      if (res.code == 200) {
+        this.provinceList = res.data;
+      }
+    },
+    /*
+     *type表示获取的是哪一级的区域信息【1,2,3,4】【省，市，县，镇】
+     */
+    async getAreaListByParentId(parentId, type) {
+      const res = await getAreaByParentId(parentId);
+      console.log(res);
+
+      if (res.code == 200) {
+        if (type == 2) this.cityList = res.data;
+        if (type == 3) this.countyList = res.data;
+        if (type == 4) this.townList = res.data;
+      }
+    },
+
+    /*
+     * type表示获取的是哪一级的区域信息【1,2,3,4】【省，市，县，镇】
+     * 根据type的值确定哪些数据要清空
+     */
+    areaChange(type, currentId) {
+      // 清楚已选数据
+      if (type <= 1) {
+        this.cityList = [];
+        this.city = undefined;
+      }
+      if (type <= 2) {
+        this.countyList = [];
+        this.county = undefined;
+      }
+      if (type <= 3) {
+        this.townList = [];
+        this.infraAreaId = undefined;
+      }
+      if (type == 4) {
+        this.infraAreaId = currentId;
+        this.sendAddress();
+        return;
+      }
+
+      // 获取新的下级列表
+      this.getAreaListByParentId(currentId, type + 1);
+    },
+    sendAddress() {
+      this.$emit("addressChange", {
+        infraAreaId: this.infraAreaId,
+        detailAddress: this.detailAddress,
+      });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.wider {
+  width: 300px;
+}
+</style>
+```
+
+使用组件时传入addressChange事件处理函数和detailAddress属性就行了
+
+TODO：区域选择现在还没有初始化数据
 
 
 ### 4.实现一个类似穿梭框的功能（搜索功能还没实现）
@@ -197,3 +378,56 @@ dev的样式：
 因为是老项目，所以不敢动别的组件，于是在公共组件文件中加上样式就好了
 
 具体为什么test环境是正常的，还不知道
+
+### 6.使用el-date-picker 组件选择日期后，默认为当天的23：59：59
+1. 后端接口“套餐到期日期”要求传递yyyy-MM-dd HH:mm:ss格式,用户选择日期，具体时间是日期的最后一秒。
+刚开始的做法是修改 value-format 属性为：
+`value-format="yyyy-MM-dd 23:59:59"`
+问题解决。
+2. 然后发现，另一个接口其他要求相同，但是数据格式要时间戳（吐槽，狗后端不能统一一下格式？）。
+这时有两种做法，一是value-format不变，发送请求前计算出时间戳
+`new Date(this.addTenantForm.expireDate).getTime()`
+二是修改`value-format="yyyy-MM-dd"` ,在请求前计算出时间戳
+`new Date(this.addTenantForm.expireDate).getTime() + 24*60*60*1000 -1000`
+第一种比较好用，符合直觉
+
+3.于是出现了第三个问题，搜索功能中，需要时间范围为起始时间当天第一秒，结束时间为最后一秒
+
+![alt text](image-12.png)
+
+于是只能计算时间
+```
+     // createDateRange在清空后会变成null
+      if (this.createDateRange && this.createDateRange.length !== 0) {
+        params.createTimeStart = this.createDateRange[0] + " 00:00:00";
+        params.createTimeEnd = this.createDateRange[1] + " 23:59:59";
+      }
+      if (this.expireDateRange && this.expireDateRange.length !== 0) {
+        params.expireTimeStart = this.expireDateRange[0] + " 00:00:00";
+        params.expireTimeEnd = this.expireDateRange[1] + " 23:59:59";
+      }
+```
+
+### 7.使用el-tree，更新选中数据后视图不更新问题
+```
+  <el-tree
+    :disabled="true"
+    class="tree-border"
+    :data="menuOptions"
+    show-checkbox
+     ref="menu"
+     node-key="id"
+     empty-text="加载中，请稍后"
+     :props="defaultProps"
+    :default-checked-keys="checkedKeys"
+  ></el-tree>
+```
+
+页面初始化的时候请求获取defaultProps和checkedKeys数据，此时是正常的
+当checkedKeys数据修改后，试图不变
+解决方法：问题出在`:default-checked-keys="checkedKeys"`这个属性只能用来初始化数列表，想要试图更新，需要这样
+```
+  await this.getMenus();
+  this.$refs.menu.setCheckedKeys(this.checkedKeys);
+```
+第一步获取数据，第二步更新视图
