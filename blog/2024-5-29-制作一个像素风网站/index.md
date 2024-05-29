@@ -59,5 +59,32 @@ body {
 显示效果
 ![alt text](image.png)
 
+## 注意事项
+antd组件中的文字不能显示像素风效果，如`<Button>你好啊ABASD</Button>`中就是普通字体
+原因是组件中写了font-family样式
+
+![alt text](image-1.png)
+
+覆盖了原字体样式
+
+所以可以使用Flowbite React组件库：https://flowbite-react.com/docs/getting-started/introduction
+这是个使用tailwind写的组件库，不会覆盖原本的样式
+
+安装Flowbite React：https://flowbite-react.com/docs/guides/create-react-app#install-flowbite-react
+
+使用组件：
+```
+import { Button } from "flowbite-react";
+
+...
+
+  <Button>你好啊ABASD</Button>
+```
+
+效果：
+![alt text](image-2.png)
+
+button中的字体就变成了像素风
+
 ## 总结
 不难，但是效果还是挺好玩的，以后自己想做什么东西的时候可以参考
