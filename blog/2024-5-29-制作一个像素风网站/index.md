@@ -15,14 +15,16 @@ tags: [像素风]
 像素风组件：[NES.css](https://nostalgic-css.github.io/NES.css/)
 
 ## 搭建过程
-1.创建React项目。虽然现在都用NEXT.js，但是为了方便，还是直接用React
-    `npx create-react-app my-project`
+1.创建React项目。虽然现在都用NEXT.js，但是为了方便，还是直接用React `npx create-react-app my-project`
+
+
 2.安装tailwindcss,参考官方文档https://tailwindcss.com/docs/guides/create-react-app
 前两步可以合并成一步的`npx create-react-app my-project` 
 
 3.使用Press Start 2P字体 https://fonts.google.com/specimen/Press+Start+2P
     注意这个字体不支持中文
     首先在index.html中引入字体
+
 ```
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,8 +32,8 @@ tags: [像素风]
 ```
 
 然后在index.css中设置字体
-```
 
+```
 body {
   margin: 0;
   font-family:"Press Start 2P" , 'Segoe UI', 'Roboto', 'Oxygen',
@@ -46,8 +48,9 @@ body {
 说明文档：https://nostalgic-css.github.io/NES.css/
 安装：`npm install nes.css`
 引入样式：在index.jss中引入:`import "nes.css/css/nes.min.css";`
-使用组件：`  <button type="button" className="nes-btn is-primary">Primary</button>`
+使用组件：`<button type="button" className="nes-btn is-primary">Primary</button>`
 可以看到就是使用样式改变的组件效果。比如nes-btn类名，给h2加上也能显示出button效果
+
 ```
         <main style={{ padding: "1rem 0" }}>
           <h2 className="text-3xl font-bold underline nes-btn">我是Tab1</h2>
@@ -56,7 +59,9 @@ body {
           <button type="button" className="nes-btn is-primary">Primary</button>
         </main>
 ```
+
 显示效果
+
 ![alt text](image.png)
 
 ## 注意事项
@@ -82,6 +87,7 @@ import { Button } from "flowbite-react";
 ```
 
 效果：
+
 ![alt text](image-2.png)
 
 button中的字体就变成了像素风
