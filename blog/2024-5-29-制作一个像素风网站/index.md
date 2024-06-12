@@ -2,7 +2,7 @@
 slug: 制作像素风网站
 title: 搭建一个像素风Sui Move合约红包网站
 authors: [ppnnssy]
-tags: [像素风]
+tags: [像素风, React, Tailwind, NES.css]
 ---
 
 ## 起因

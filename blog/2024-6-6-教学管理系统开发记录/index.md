@@ -2,13 +2,15 @@
 slug: 教学管理系统开发记录
 title: 教学管理系统开发记录
 authors: [ppnnssy]
-tags: [Vue3, TS, ECharts, ProTable]
+tags: [Vue3, TS, ECharts, ProTable,开发笔记,芯位]
 ---
 
 ## 吐槽在先
 
-正开发 saas 教学管理系统呢，活都分配好了，框架写好了，产品经理没了，笑死
-产品线的头头早晚把整个公司搞黄喽
+正开发 saas 教学管理系统呢，活都分配好了，框架写好了，产品经理没了，笑死。
+
+产品线的头头早晚把整个公司搞黄喽。
+
 saas 暂停，先去干教学管理系统的活，主要是几个图标，正好熟悉一下 ECharts
 
 ## 项目说明
@@ -22,7 +24,9 @@ saas 暂停，先去干教学管理系统的活，主要是几个图标，正好
 ## 参考
 
 官方示例：https://echarts.apache.org/examples/zh/editor.html?c=pie-doughnut&lang=ts
+
 官方文档：https://echarts.apache.org/zh/option.html#title
+
 大佬的花样绘图：http://chart.majh.ltd/
 
 ## 开发过程
@@ -120,8 +124,11 @@ onMounted(() => {
 
 代码说明：
 重点是配置项中的 label 项，因为圆环里面的两行字体不同
+
 ![alt text](image-1.png)
+
 所以每一行要单独配置
+
 其他的都是常规配置，不多说
 
 使用组件：
@@ -152,7 +159,9 @@ http://chart.majh.ltd/xJzYGTWCSr
 之前的应该是银龄教师管理系统遇到过这个问题，数据显示不出来
 当时时间太紧，没时间仔细研究，最后把任务给了熟悉这个组件的同事。
 这次有时间，看了一下组件的源码：
+
 官网：https://docs.spicyboy.cn/
+
 组件文档：https://juejin.cn/post/7166068828202336263#heading-14
 
 杜文博封装的系统，可以直接问但是没必要，扒拉一下源码完事。文档写的不太行，比如我遇到的问题，传入了 getDataApi 函数之后，数据却不显示，文档中没有找到解决办法。
