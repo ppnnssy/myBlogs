@@ -37,25 +37,48 @@ saas 暂停，先去干教学管理系统的活，主要是几个图标，正好
 
 封装的组件代码：
 
-```
+```vue
 <template>
-  <div id="PieChart" class="echarts"></div>
+  <div :id="'PieChart' + sign" class="echarts"></div>
 </template>
 
 <script setup lang="ts">
 import { ECharts, EChartsOption, init } from "echarts";
-import { onMounted, defineProps } from "vue";
-const props = defineProps(["num", "label"]);
+import { onMounted, defineProps, ref, onBeforeMount } from "vue";
+
+const sign = ref<number>(1);
+onBeforeMount(() => {
+  sign.value = Math.random() + 1;
+});
+
+// const props = defineProps(["num", "label"]);
+const props = defineProps({
+  num: {
+    type: Number,
+    default: 0,
+  },
+  label: {
+    type: String,
+    default: "",
+  },
+  size: {
+    type: String,
+    default: "mini",
+  },
+});
 interface InitData {
   num: number;
   label?: string;
 }
+
 const initChart = (data: InitData) => {
+  console.log("===>", props.size);
+
   let formatter = `{total|${data.num}%}`;
   if (data.label) {
     formatter = formatter + "\n\r" + `{active|${data.label}}`;
   }
-  const charEle = document.getElementById("PieChart")!;
+  const charEle = document.getElementById(`PieChart` + sign.value)!;
   const charEch: ECharts = init(charEle);
   const colors = ["#3652FF", "#E8E8E8"];
   const option: EChartsOption = {
@@ -67,23 +90,21 @@ const initChart = (data: InitData) => {
         radius: ["50%", "70%"],
         avoidLabelOverlap: false,
         label: {
-          normal: {
-            show: true,
-            position: "center",
-            color: "#4c4a4a",
-            formatter,
-            rich: {
-              total: {
-                fontSize: 30,
-                fontFamily: "微软雅黑",
-                color: "#3652FF",
-              },
-              active: {
-                fontFamily: "微软雅黑",
-                fontSize: 16,
-                color: "#6c7a89",
-                lineHeight: 30,
-              },
+          show: true,
+          position: "center",
+          color: "#4c4a4a",
+          formatter,
+          rich: {
+            total: {
+              fontSize: props.size === "mini" ? 20 : 30,
+              fontFamily: "微软雅黑",
+              color: "#3652FF",
+            },
+            active: {
+              fontFamily: "微软雅黑",
+              fontSize: props.size === "mini" ? 14 : 16,
+              color: "#6c7a89",
+              lineHeight: 30,
             },
           },
         },
@@ -94,9 +115,7 @@ const initChart = (data: InitData) => {
         //     fontWeight: "bold",
         //   },
         // },
-        labelLine: {
-          show: false,
-        },
+
         data: [
           { value: props.num, name: "达成度" },
           { value: 100 - props.num, name: "未达成" },
@@ -120,6 +139,7 @@ onMounted(() => {
   margin: 0 auto;
 }
 </style>
+
 ```
 
 代码说明：
