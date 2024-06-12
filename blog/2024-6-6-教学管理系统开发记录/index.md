@@ -347,8 +347,9 @@ const getTableList = (params: {}) => {
 
 ## 项目中使用 ECharts 其他问题及解决方法记录
 主要原因是文档不熟，很多功能在配置项中都能解决，但是没有用过，而且文档太多，所以需要搜一下，然后看文档
+问题顺序是开发的时候遇到的顺序，有点乱，将就看吧
 
-### 一. 柱状图
+### 一. 柱状图空隙，整体高度，柱子宽度调整
 关于柱状图,这是调整前的图，有以下问题和解决方法：
 
 ![alt text](image-5.png)
@@ -418,6 +419,128 @@ const getTableList = (params: {}) => {
 
 最终效果：
 ![alt text](image-8.png)
+
+
+### 三. X轴区间柱状图
+一般柱状图x轴是这样的，柱子在分类名称的正上方：
+
+![alt text](image-9.png)
+
+需求中要做一个成绩统计，柱子在区间中：
+
+![alt text](image-10.png)
+
+解决方法：
+
+基本思路是在x轴上弄两组数据。柱子正下方的x数据隐藏，另一组数据向左偏移半个相位显示：
+
+```
+    const xData = ["0", "20", "40", "60", "80", "90", "100"];
+    const barData = [1, 5, 3, 12, 14, 7];
+
+    //...
+
+    xAxis: [
+      { data: barData, show: false },
+      {
+        data: xData,
+        position: "bottom",
+        boundaryGap: false,
+      },
+    ],
+    yAxis: {
+      type: "value",
+      show: false,
+    },
+```
+
+首先使用barData做出一个x轴上的刻度标识，其实只要是和barData数组等长的数组都可以，如果不隐藏的话，效果是这样的：
+
+![alt text](image-11.png)
+
+由于还需要鼠标悬浮显示数值：
+
+![alt text](image-12.png)
+
+此时显示的还是错误的：
+![alt text](image-13.png)
+所以要对数值做处理：
+```
+  const xShowData = ["0", "20", "40", "60", "80", "90", "100"];
+  const xTrueData = []; //这个数据主要是为了鼠标悬浮的时候显示出来
+  xShowData.forEach((item, index) => {
+    if (index == xShowData.length - 1) return;
+    xTrueData.push(xShowData[index] + "-" + xShowData[index + 1] + "分");
+  });
+  const barData = [1, 5, 3, 12, 14, 7];
+  // ...
+
+      xAxis: [
+      { data: xTrueData, show: false },
+      {
+        data: xShowData,
+        position: "bottom",
+        boundaryGap: false,
+      },
+    ],
+```
+
+这样就能正确显示了：
+
+![alt text](image-14.png)
+
+然后隐藏掉，并设置第二个真正要显示的刻度xData
+
+这时候要注意使用` boundaryGap: false` 去除x轴的留白策略（可以看 [文档](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)），这样就正好偏移半个相位，这样就符合需求了
+
+参考：https://www.cnblogs.com/jszhp/p/14866902.html
+
+### 四. 柱状图上带高亮横杠
+需求图：
+
+![alt text](image-15.png)
+
+这个黄色的横杠代表平均值，是另一组数据
+
+这个实现起来比较麻烦，重点是在series数据中设置markPoint
+
+```
+  const barData2 = [3, 4, 5, 9, 7, 5]; //平均值
+  let rodData = [];
+  barData2.forEach((item, index) => {
+    // 设置markPoint数据
+    rodData.push({
+      symbol: "rect",
+      symbolSize: [30, 4],
+      xAxis: index,
+      yAxis: item,
+      itemStyle: {
+        color: "#FFD60C",
+      },
+    });
+  });
+
+//...
+
+    series: [
+      {
+        data: barData,
+        type: "bar",
+        name: "课程成绩分布",
+        barWidth: 30,
+        markPoint: {
+          data: rodData,
+        },
+      },
+    ],
+```
+
+看代码就比较简单了，使用barData2数据生成一组markPoint数据，然后放进series中就好了
+
+参考：https://blog.csdn.net/baozilianya/article/details/129907185?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171818113716800222869101%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171818113716800222869101&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-129907185-null-null.142^v100^pc_search_result_base8&utm_term=echarts%E6%9F%B1%E7%8A%B6%E5%9B%BE%E9%A1%B6%E9%83%A8%E6%A8%AA%E7%BA%BF&spm=1018.2226.3001.4187
+
+ps：参考文章CSDN的以后不会挂了吧。抄个完整代码好了: [点击下载js文件](./柱状图.js)
+
 
 ## 总结
 
