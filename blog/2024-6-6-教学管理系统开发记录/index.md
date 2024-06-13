@@ -399,7 +399,7 @@ const getTableList = (params: {}) => {
 
 图例和图本身重合了。ECharts应该是没有优化好容器较小时的绘图，容器放大到700*700就没问题。但是项目中肯定不能随意调盒子大小。
 
-解决方法是使用radar.radius属性把图缩小一些：
+解决方法是使用radar.radius属性把图缩小一些，并使用 center 属性控制图的位置（图例不动）：
 
 ```
     radar: {
@@ -409,7 +409,8 @@ const getTableList = (params: {}) => {
         { name: "考试平均分", max: 30000 },
         { name: "作业平均分", max: 38000 },
       ],
-      radius: "60%",
+      radius: "65%",
+      center: ["50%", "55%"],
       axisName: {
         //  字体颜色
         color: "#000",
