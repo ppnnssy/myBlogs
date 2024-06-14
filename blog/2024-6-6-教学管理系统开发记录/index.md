@@ -497,46 +497,133 @@ const getTableList = (params: {}) => {
 参考：https://www.cnblogs.com/jszhp/p/14866902.html
 
 ### 四. 柱状图上带高亮横杠
+
 需求图：
 
 ![alt text](image-15.png)
 
 这个黄色的横杠代表平均值，是另一组数据
 
-这个实现起来比较麻烦，重点是在series数据中设置markPoint
+这个需求实现有两个难点，一是高亮横杠，二是图例(legend)风格不统一的设置
 
+实现思路：
+
+一。黄色横杠用bar.series.markPoint实现。这是在一组数据上打标记用的，在最后一组数据上添加，并将yAxis设置为平均值就行了<br/>
+二。因为一中实际上没有为平均值设置柱子，所以图例上不会显示这组数据。解决办法是设置一组空数据，并单独设计图例样式
+
+实现代码：
 ```
-  const barData2 = [3, 4, 5, 9, 7, 5]; //平均值
+  const average = [7, 3, 9, 2, 5];
   let rodData = [];
-  barData2.forEach((item, index) => {
+  average.forEach((item, index) => {
     // 设置markPoint数据
     rodData.push({
       symbol: "rect",
-      symbolSize: [30, 4],
+      symbolSize: [40, 3],
       xAxis: index,
       yAxis: item,
+      value: item,
+      // symbolOffset: [-20, 0],
       itemStyle: {
         color: "#FFD60C",
+      },
+      label: {
+        show: false,
+      },
+      emphasis: {
+        disabled: true,
       },
     });
   });
 
-//...
+  option = {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    legend: [
+      {
+        data: ["一等奖", "二等奖", "三等奖"],
+        left: "5%",
+        top: "10",
+      },
+      {
+        data: ["已获奖老师平均值"],
+        left: "60%",
+        itemHeight: 5,
+        itemWidth: 30,
+        top: "10",
+        selectedMode: false,
+        itemStyle: {
+          color: "#FFD60C",
+        },
+      },
+    ],
 
+    grid: {
+      height: 150,
+    },
+    xAxis: [
+      {
+        type: "category",
+        data: ["国际级", "国家级", "省级", "市级", "校级"],
+      },
+    ],
+    yAxis: [
+      {
+        type: "value",
+      },
+    ],
     series: [
       {
-        data: barData,
+        name: "一等奖",
         type: "bar",
-        name: "课程成绩分布",
-        barWidth: 30,
+        stack: "medal",
+        color: "#68BBC4",
+        barWidth: 40,
+        data: [1, 3, 1, 5, 2],
+      },
+      {
+        name: "二等奖",
+        type: "bar",
+        stack: "medal",
+        barWidth: 40,
+        data: [3, 7, 8, 10, 6],
+      },
+      {
+        name: "三等奖",
+        type: "bar",
+        stack: "medal",
+        barWidth: 40,
+        data: [4, 2, 8, 6, 5],
         markPoint: {
           data: rodData,
         },
       },
+      // 设置这个值主要是为了legend显示
+      {
+        data: [],
+        type: "bar",
+        name: "已获奖老师平均值",
+      },
     ],
+  };
 ```
 
-看代码就比较简单了，使用barData2数据生成一组markPoint数据，然后放进series中就好了
+代码部分细节说明：
+一。legend除了是一个对象，还可以是数组，用于对多组图例单独设置样式
+
+二。因为已获奖老师平均值是空置，所以鼠标悬浮时是不显示这组值的，如下：
+
+![alt text](image-16.png)
+
+如果想要显示，就把空数组换成真实数据，然后隐藏柱子<br/>
+隐藏柱子我一般用 barWidth: 0 <br/>
+(但是这个办法在官方示例上不好用，会以默认宽度显示。我自己的页面上显示是正常的，不知道为啥官方示例上不行。)<br/>
+或者保持空数组，转而使用tooltip.formatter来自定义显示数据
+
 
 参考：https://blog.csdn.net/baozilianya/article/details/129907185?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171818113716800222869101%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171818113716800222869101&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-129907185-null-null.142^v100^pc_search_result_base8&utm_term=echarts%E6%9F%B1%E7%8A%B6%E5%9B%BE%E9%A1%B6%E9%83%A8%E6%A8%AA%E7%BA%BF&spm=1018.2226.3001.4187
 
