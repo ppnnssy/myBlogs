@@ -630,6 +630,155 @@ const getTableList = (params: {}) => {
 ps：参考文章CSDN的以后不会挂了吧。抄个完整代码好了: [点击下载js文件](./柱状图.js)
 
 
+### 五. 根据返回数据v-for循环图表
+本来以为这个挺简单的，结果发现还是有很多坑。
+首先，因为渲染图表需要调用组件暴露出来的init函数，所以要给每个图标都绑定一个ref，然后通过ref.init()来调用。
+问题就是在v-for循环中，怎么给每个图表都绑定不同的ref。
+
+问了GPT，给出的解决方法是：
+B.vue:
+
+```
+const sayHi=()=>{
+  console.log("hi");
+}
+defineExpose({sayHi})
+```
+App.vue:
+
+```
+  <div v-for="(i,index) in items">
+    <B :ref="setItemRef(index)" />
+  </div>
+
+  ...
+
+const items = ref([1, 2, 3, 4]);
+const itemRefs = ref({});
+const setItemRef = (index) => (el) => {
+  if (el) {
+    itemRefs.value[index] = el;
+  }
+};
+```
+
+这样，根据index就可以给每个图表绑定不同的ref了。
+调用的时候，使用 `itemRefs[index]` 就可以了
+
+总结一下就是，Vue3中想要绑定元素，有两种方法：
+1.直接绑定一个ref变量。
+
+```
+ <B :ref="bRef" />
+
+ const bRef=ref()
+```
+2.绑定一个函数，这个函数的参数就是这个元素对象。在函数逻辑中将元素对象保存到变量中。
+
+```
+  <B :ref="setItemRef" />
+
+  const bRef=ref()
+  const setItemRef=(el)=>{
+  console.log(el);
+  bRef.value=el
+}
+```
+
+而我在项目中，因为需要index这个参数，所以使用了高阶函数。
+还需要注意的是，如果想要通过itemRefs调用组件中的函数，需要在页面渲染之后
+赋值和调用如果在同一个同步函数中，则需要使用 nextTick 函数
+
+### 六. 雷达图标签气泡框tooltip
+这个问题是目前项目中遇见的最麻烦的问题。
+问题描述：
+需要鼠标悬浮在雷达图上的时候，显示出 学生达成度 数据，以及根据分数显示出成绩水平。
+
+![alt text](image-17.png)
+
+雷达图本身的tooltip只能支持鼠标悬浮显示标签本身，没有富文本编辑的功能（悬浮在图内部数据上的气泡文字是可以编辑的），所以只能自己写。
+
+参考：http://chart.majh.ltd/xBJtlNDEhM
+
+这里可以参考大佬的做法，即：
+1. 使用 ` myChart.on("mouseover",(params)=>{...})` 定义鼠标移入事件
+2. `document.getElementById` 获取到雷达图所在的div
+3. 动态添加一个tooltip气泡框，并让气泡框随着鼠标移动。并在鼠标移出时移除气泡框。
+
+思路有了，开始写代码：
+
+```js
+    // 获取画布元素，创建tooltip元素
+    let chartPanel = document.getElementById("teach-radar" + sign.value);
+    let newTooltip = document.createElement("div");
+
+    myChart.on("mouseover", params => {
+      // 判断鼠标移入的是标签还是图表内部数据
+      if (params.componentType === "radar") {
+        myChart.setOption({
+          tooltip: {
+            show: false,
+          },
+        });
+        newTooltip.setAttribute("class", "tooltip");
+
+        // 获取鼠标位置
+        let clientX = params.event.offsetX;
+        let clientY = params.event.offsetY;
+        newTooltip.style.left = clientX + 15 + "px";
+        newTooltip.style.top = clientY + 15 + "px";
+        newTooltip.style.height = "50px";
+
+        // 一些数据处理，不用管
+        const getEvaluate = label => {
+          const index = props.radarData.indicator?.findIndex(item => item.name === label);
+          return props.radarData.evaluate[index];
+        };
+        // 动态添加内容
+        newTooltip.innerHTML = `
+        <div class="title">
+         学生达成度
+        </div>
+        <div>
+          <span>${params.name} --</span>
+          ${getEvaluate(params.name)}
+        </div>
+      `;
+
+        chartPanel.appendChild(newTooltip);
+      } else {
+        // 如果鼠标移入的是图表内部数据，则使用原生的tooltip
+        myChart.setOption({
+          tooltip: { show: true },
+        });
+      }
+    });
+
+
+    // 鼠标移动的时候，动态移动tooltip
+    myChart.on("mousemove", params => {
+      if (params.componentType === "radar") {
+        let clientX = params.event.offsetX;
+        let clientY = params.event.offsetY;
+        newTooltip.style.left = clientX + 15 + "px";
+        newTooltip.style.top = clientY + 15 + "px";
+      }
+    });
+
+    // 鼠标移出时，移除手动添加的气泡框，并将原生的tooltip设置为不显示
+    myChart.on("mouseout", params => {
+      myChart.setOption({
+        tooltip: { show: false },
+      });
+      if (params.componentType === "radar") chartPanel.removeChild(newTooltip);
+    });
+
+```
+
+这里注意一个小细节，如果在 mouseout 时不把tooltip设置为 `tooltip: { show: false }` ,那么鼠标移入标签时，即使函数第一步就设置了 `tooltip: { show: false }` ，tooltip还是会显示一下，然后才消失。
+
+解决了之后看起来并不难，实际做的时候老费劲了
+
 ## 总结
 
 查文档找不到对应的配置项，文档东西太多了还没认真看，还是得靠网友的笔记啊
