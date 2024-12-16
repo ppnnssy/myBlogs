@@ -127,3 +127,32 @@ const showMessageBox = () => {
 如果找到顶层都没有找到noticepopover，则说明点击的元素不在红框内。
 
 如果只有单层的话其实不用这么麻烦，直接使用自定义指令，判断一下点击的元素是否等于绑定的元素就好了
+
+## 优化
+后来发现可以用element.contains()方法，判断点击的元素是否在某个元素内。
+于是函数改为：
+```
+function eventHandler(e) {
+  // // 获取所有父节点
+  // let par = e.target;
+  // for (;;) {
+  //   // 循环到页面最顶层还没有发现noticepopover
+  //   if (!par) {
+  //     closePopover();
+  //     break;
+  //   }
+  //   if (par?.attributes?.sign?.value == "noticepopover") {
+  //     break;
+  //   }
+  //   par = par.parentNode;
+  // }
+  const elements= document.querySelectorAll("div[sign='noticepopover']");
+  for(let ele of elements){
+    if(ele.contains(e.target)){
+      return
+    }
+  }
+  showNoticePopover.value = false;
+
+}
+```
