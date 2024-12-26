@@ -1,0 +1,8 @@
+{
+  "label": "Movescriptions智能铭文",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Movescriptions智能铭文各个版本的源码分析，主要目的是通过分析源码，学习智能铭文的实现方式，学习Move语言"
+  }
+}

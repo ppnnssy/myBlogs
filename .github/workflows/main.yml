@@ -1,0 +1,29 @@
+name: GitHub Actions Build and Deploy Demo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: macos
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.1.1
+          
+        # 安装依赖
+      - name: install dep
+        run: npm install
+
+        # 打包构建
+      - name: build
+        run: npm run build
+
+        # 部署运行
+      - name: Deploy
+        uses: rdarida/simple-github-pages-deploy-action@v1
+        with:
+          git-base-folder: build
+          branch: master

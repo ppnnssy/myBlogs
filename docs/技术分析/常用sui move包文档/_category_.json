@@ -1,0 +1,8 @@
+{
+  "label": "常用sui move包文档",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "常用sui move包文档，主要包括各个包中结构体的用途和public函数介绍"
+  }
+}
