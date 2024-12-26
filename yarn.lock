@@ -8001,7 +8001,7 @@ sass-loader@^16.0.2:
   dependencies:
     neo-async "^2.6.2"
 
-sass@^1.3.0, sass@^1.30.0, sass@^1.83.0:
+sass@^1.3.0, sass@^1.30.0:
   version "1.83.0"
   resolved "https://registry.npmmirror.com/sass/-/sass-1.83.0.tgz"
   integrity sha512-qsSxlayzoOjdvXMVLkzF84DJFc2HZEL/rFyGIKbbilYtAvlCxyuzUeff9LawTn4btVnLKg75Z8MMr1lxU1lfGw==
